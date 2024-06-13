@@ -165,7 +165,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         activityInsert("Menghapus User : ".$user->name);
-        return redirect('/user')->with('status', 'User Berhasil Dihapus.');
+        return response()->json(['message' => 'Data Berhasil Dihapus.']);
     }
 
     /**

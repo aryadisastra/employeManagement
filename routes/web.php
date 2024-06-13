@@ -10,6 +10,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\KategoriBeritaController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\LembagaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TagBeritaController;
@@ -45,18 +46,23 @@ Route::middleware('admin')->group(function(){
 
     Route::get('/getDataChart',[HomeController::class,'getDataChart']);
 
+    Route::get('/divisi',[DivisiController::class,'index'])->name('divisi');
+    Route::post('/divisi/store',[DivisiController::class,'store']);
+    Route::post('/divisi/update/{id}',[DivisiController::class,'update']);
+    Route::delete('/divisi/delete/{id}',[DivisiController::class,'delete']);
+    Route::get('/divisi-list',[DivisiController::class,'getData']);
 
     Route::get('/role',[RoleController::class,'index'])->name('role');
     Route::post('/role/store',[RoleController::class,'store']);
     Route::delete('/role/delete/{id}',[RoleController::class,'delete']);
     Route::get('/permission-list',[RoleController::class,'getDataPermission']);
-
+    
     Route::get('/user',[UserController::class,'index'])->name('users.index');
     Route::get('/user-list',[UserController::class,'getData']);
     Route::post('/user/store',[UserController::class,'store'])->name('users.store');
     Route::post('/user/update/{id}',[UserController::class,'update'])->name('users.update');
     Route::delete('/user/delete/{id}',[UserController::class,'delete']);
-
+    
     Route::get('/activity',[ActivityController::class,'index'])->name('activity');
     Route::get('/activity-list',[ActivityController::class,'getDataActivity']);
     

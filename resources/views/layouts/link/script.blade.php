@@ -34,6 +34,7 @@
     <script src="{{asset('app-assets/js/scripts/pages/app-role-list.js')}}"></script>
     <script src="{{asset('app-assets/js/scripts/pages/app-activity-list.js')}}"></script>
     <script src="{{asset('app-assets/js/scripts/pages/app-user-list.js')}}"></script>
+    <script src="{{asset('app-assets/js/scripts/pages/app-divisi-list.js')}}"></script>
     <!-- END: Page JS-->
 
     <script>
