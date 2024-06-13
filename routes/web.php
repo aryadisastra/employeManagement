@@ -11,6 +11,7 @@ use App\Http\Controllers\KategoriBeritaController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\LembagaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TagBeritaController;
@@ -45,6 +46,12 @@ Route::middleware('admin')->group(function(){
     Route::get('/home', [HomeController::class,'index'])->name('home');
 
     Route::get('/getDataChart',[HomeController::class,'getDataChart']);
+
+    Route::get('/jabatan',[JabatanController::class,'index'])->name('jabatan');
+    Route::post('/jabatan/store',[JabatanController::class,'store']);
+    Route::post('/jabatan/update/{id}',[JabatanController::class,'update']);
+    Route::delete('/jabatan/delete/{id}',[JabatanController::class,'delete']);
+    Route::get('/jabatan-list',[JabatanController::class,'getData']);
 
     Route::get('/divisi',[DivisiController::class,'index'])->name('divisi');
     Route::post('/divisi/store',[DivisiController::class,'store']);
