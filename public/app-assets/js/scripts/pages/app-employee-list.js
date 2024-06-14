@@ -2,6 +2,12 @@ $(function () {
     ('use strict');
   
     var dtUser = $('.employee-table')
+
+    statusObj = {
+      'aktif': { title: 'Aktif', class: 'badge-light-success' },
+      'cuti': { title: 'Cuti', class: 'badge-light-warning' },
+      'nonaktif': { title: 'Non-Aktif', class: 'badge-light-danger' }
+    };
   
     // Users List datatable
     if (dtUser.length) {
@@ -18,6 +24,7 @@ $(function () {
           { data: 'nama' },
           { data: 'divisi' },
           { data: 'jabatan' },
+          { data: 'status' },
           { data: 'joined' },
         ],
         columnDefs: [
@@ -26,10 +33,24 @@ $(function () {
             render: function (data, type, full, meta) {
                 return meta.row + 1; // Isi kolom dengan nomor urut
             }
+          },{
+            // User Status
+            targets: 4,
+            render: function (data, type, full, meta) {
+              var $status = full.status;
+  
+              return (
+                '<span class="badge rounded-pill ' +
+                statusObj[$status].class +
+                '" text-capitalized>' +
+                statusObj[$status].title +
+                '</span>'
+              );
+            }
           },
           {
             // Actions
-            targets: 5,
+            targets: 6,
             title: 'Actions',
             orderable: false,
             render: function (data, type, full, meta) {

@@ -53,6 +53,7 @@ Route::middleware('admin')->group(function(){
     Route::post('/employee/store',[EmployeeController::class,'store']);
     Route::get('/employee/edit/{id}',[EmployeeController::class,'edit']);
     Route::post('/employee/update/{id}',[EmployeeController::class,'update']);
+    Route::post('/employee/updateStatus/{id}',[EmployeeController::class,'updateStatus']);
     Route::delete('/employee/delete/{id}',[EmployeeController::class,'delete']);
     Route::get('/employee-list',[EmployeeController::class,'getData']);
 

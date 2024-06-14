@@ -39,9 +39,10 @@ class HomeController extends Controller
         $totalEmployee  = Employee::where('status','aktif')->count();
         foreach($div as $dt)
         {   
-            $chart[$dt->nama]['totalEmployee'] = Employee::where('divisi_id',$dt->id)->count();
-            $chart[$dt->nama]['totalEmployeeAll'] = $totalEmployee;
-            $chart[$dt->nama]['totalDivisiAll'] = $totalDivisi;
+            $chart[$dt->nama]['totalEmployee']      = Employee::where('divisi_id',$dt->id)->count();
+            $chart[$dt->nama]['divisiNama']         = $dt->nama;
+            $chart[$dt->nama]['totalEmployeeAll']   = $totalEmployee;
+            $chart[$dt->nama]['totalDivisiAll']     = $totalDivisi;
         }
         return response()->json($chart);
     }
