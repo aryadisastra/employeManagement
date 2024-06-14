@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lembaga;
-use App\Models\Pesantren;
-use App\Models\User;
+use App\Models\Divisi;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,8 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data['totalDivisi'] = 0;
-        $data['totalEmployee'] = 0;
+        $data['totalDivisi']    = Divisi::get()->count();
+        $data['totalEmployee']  = Employee::where('status','aktif')->count();
 
         return view('home', $data);
     }
@@ -35,29 +34,14 @@ class HomeController extends Controller
     public function getDataChart()
     {
         $chart =[]; 
-        $totalPesantrenData = 0;
-        $totalSantriData = 0;
-        $totalPesantren = 0;
-        $totalSantri = 0;
-        $lembaga = Lembaga::where('provinsi','!=',null)->get()->groupBy('provinsi');
-        foreach($lembaga as $dt)
+        $div = Divisi::all();
+        $totalDivisi    = Divisi::get()->count();
+        $totalEmployee  = Employee::where('status','aktif')->count();
+        foreach($div as $dt)
         {   
-            foreach($dt as $lm){
-                $pesantren = Pesantren::where('lembaga_id',$lm->id)->count();
-                $santri    = Pesantren::where('lembaga_id',$lm->id)->sum('jumlah_santri');
-                $totalPesantren     += $pesantren;
-                $totalSantri        += $santri;
-                $totalPesantrenData += $pesantren;
-                $totalSantriData        += $santri;
-                $chart[$lm->provinsi] = [
-                    'provinsi'  => $lm->Provinsi->name,
-                    'pesantren' => $totalPesantren,
-                    'santri'    => $totalSantri,
-                ];
-            }
-            $totalPesantren = $totalSantri = 0;
-            $chart[$lm->provinsi]['totalPesantren'] = $totalPesantrenData;
-            $chart[$lm->provinsi]['totalSantri'] = $totalSantriData;
+            $chart[$dt->nama]['totalEmployee'] = Employee::where('divisi_id',$dt->id)->count();
+            $chart[$dt->nama]['totalEmployeeAll'] = $totalEmployee;
+            $chart[$dt->nama]['totalDivisiAll'] = $totalDivisi;
         }
         return response()->json($chart);
     }
