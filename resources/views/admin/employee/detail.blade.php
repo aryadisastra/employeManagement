@@ -103,25 +103,28 @@
 <!-- deactivate account  -->
 <div class="card">
     <div class="card-header border-bottom">
-        <h4 class="card-title">Delete Account</h4>
+        <h4 class="card-title">Status Employee</h4>
     </div>
     <div class="card-body py-2 my-25">
         <div class="alert alert-warning">
-            <h4 class="alert-heading">Are you sure you want to delete your account?</h4>
+            <h4 class="alert-heading">Status Employee</h4>
             <div class="alert-body fw-normal">
-                Once you delete your account, there is no going back. Please be certain.
+                Perhatikan Baik Baik Sebelum Mengubah Status Employee
             </div>
         </div>
 
-        <form id="formAccountDeactivation" class="validate-form" onsubmit="return false">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation" data-msg="Please confirm you want to delete account" />
-                <label class="form-check-label font-small-3" for="accountActivation">
-                    I confirm my account deactivation
-                </label>
+        <form id="formAccountDeactivation" class="validate-form" method="POST" action="/employee/updateStatus/{{$data->id}}">
+            @csrf
+            <div class="form-select">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="aktif" {{$data->status == 'aktif' ? 'selected' : ''}}>Aktif</option>
+                    <option value="cuti" {{$data->status == 'cuti' ? 'selected' : ''}}>Cuti</option>
+                    <option value="nonaktif" {{$data->status == 'nonaktif' ? 'selected' : ''}}>Non-Aktif</option>
+                </select>
             </div>
             <div>
-                <button type="submit" class="btn btn-danger deactivate-account mt-1">Deactivate Account</button>
+                <button type="submit" class="btn btn-danger deactivate-account mt-1">Ubah Status</button>
             </div>
         </form>
     </div>

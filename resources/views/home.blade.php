@@ -65,7 +65,7 @@
                         </h3>
                     </div>
                 </div>
-                <div id="wilayah-chart">
+                <div id="dashboard-chart">
                 </div>
             </div>
         </div>
@@ -90,18 +90,28 @@
             var totalEmployee = 0; 
 
             
+            categories.push('Divisi'); 
             $.each(response, function(divisi, data) {
                 totalEmployee = data.totalEmployeeAll
                 totalDivisi = data.totalDivisiAll
-                categories.push(divisi); 
                 seriesData.push({
-                    name: divisi,
-                    data: [data.totalEmployee] 
+                    name: data.divisiNama, 
+                    data: [{
+                        x: data.divisiNama, 
+                        y: data.totalEmployee 
+                    }]
                 });
             });
 
             var options = {
-                series: seriesData,
+                series: seriesData.map(function(item) {
+                    return {
+                        name: item.name,
+                        data: item.data.map(function(dataItem) {
+                            return dataItem.y; // Return totalEmployee for each division
+                        })
+                    };
+                }),
                 chart: {
                     type: 'bar',
                     height: 350
@@ -139,21 +149,21 @@
                         }
                     },
                     custom: function({ series, seriesIndex, dataPointIndex, w }) {
-                        var division = w.globals.labels[dataPointIndex];
-                        var totalEmployees = series[seriesIndex][dataPointIndex];
+                        var division = seriesData[seriesIndex].name; // Get divisiNama from seriesData
+                        var totalEmployees = series[seriesIndex][dataPointIndex]; // Get totalEmployee from series
                         return '<div class="tooltip-title">' + division + '</div><div class="tooltip-content">' + totalEmployees.toLocaleString('id-ID') + ' Employee</div>';
                     }
                 }
             };
             $('#totalDivisi').text(totalDivisi.toLocaleString('id-ID'))
             $('#totalEmployee').text(totalEmployee.toLocaleString('id-ID'))
-            var wil = document.getElementById('wilayah-chart');
+            var wil = document.getElementById('dashboard-chart');
     
             if (wil) {
                 var chart = new ApexCharts(wil, options);
                 chart.render();
             } else {
-                console.log('Element with id "wilayah-chart" not found');
+                console.log('Element with id "dashboard-chart" not found');
             }
         },
         error: function(xhr, status, error) {

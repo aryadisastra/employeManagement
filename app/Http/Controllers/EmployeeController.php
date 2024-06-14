@@ -15,9 +15,11 @@ class EmployeeController extends Controller
     public function index()
     {
         $data = Employee::get();
+        $divisi     = Divisi::get();
+        $jabatan    = Jabatan::get();
         activityInsert("Membuka Halaman Employee");
 
-        return view('admin.employee.index',['data'=>$data]);
+        return view('admin.employee.index',['data'=>$data,'divisi'=>$divisi,'jabatan'=>$jabatan]);
     }
 
     public function create()
@@ -46,18 +48,36 @@ class EmployeeController extends Controller
         return view('admin.employee.detail',compact('divisi','jabatan','lead','data'));
     }
 
-    public function getData()
+    public function getData(Request $r)
     {
         try {
             $datas = [];
-            $divisi = Employee::get();
-            foreach($divisi as $dt)
+            $divisi = $r->divisi;
+            $jabatan = $r->jabatan;
+            $status = $r->status;
+
+            $query = Employee::query();
+            if ($divisi != null) {
+                $query->where('divisi_id', $divisi);
+            }
+    
+            if ($jabatan != null) {
+                $query->where('jabatan_id', $jabatan);
+            }
+
+            if ($status != null) {
+                $query->where('status', $status);
+            }
+
+            $employee = $query->get();
+            foreach($employee as $dt)
             {
                 $datas[] = [
                     'id'        => $dt->id,
                     'nama'      => $dt->nama,
                     'divisi'    => isset($dt->divisi) ? $dt->divisi->nama : '-',
                     'jabatan'   => isset($dt->jabatan) ? $dt->jabatan->nama : '-',
+                    'status'    => $dt->status,
                     'joined'    => date("j F Y", strtotime($dt->tanggal_bergabung)),
                 ];
             }
@@ -151,6 +171,36 @@ class EmployeeController extends Controller
 
 
             activityInsert("Update Employee : ".$request->nama);
+            return redirect('/employee')->with('success', 'Employee Berhasil Di Update.');
+        } catch(Exception $e)
+        {
+            DB::rollBack();
+            return redirect('/employee')->with('fail', 'Data Gagal Dibuat');
+        }
+    }
+
+    public function updateStatus(Request $request,$id)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'status'                  => 'required|string|max:255',
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->back()->with('fail', 'Error Validasi : '.$validator->errors()->first());
+            }
+    
+            DB::beginTransaction();
+
+            $insert = Employee::find($id);
+
+            $insert->status               = $request->status;
+            $insert->save();
+
+            DB::commit();
+
+
+            activityInsert("Update Employee Status : ".$request->nama);
             return redirect('/employee')->with('success', 'Employee Berhasil Di Update.');
         } catch(Exception $e)
         {

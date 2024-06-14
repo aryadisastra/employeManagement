@@ -14,6 +14,43 @@
             </div>
             <!-- table -->
             <div class="card">
+
+                <div class="card-body border-bottom">
+                    <h4 class="card-title">Search & Filter</h4>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="" class="form-label">Jabatan</label>
+                                <select class="form-control" name="jabatan" id="jabatan">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach ($jabatan as $item)
+                                        <option value="{{$item->id}}">{{$item->nama}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">Divisi</label>
+                                <select class="form-control" name="divisi" id="divisi">
+                                    <option value="">Pilih Divisi</option>
+                                    @foreach ($divisi as $item)
+                                        <option value="{{$item->id}}">{{$item->nama}}</option>
+                                    @endforeach
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">Status</label>
+                                <select class="form-control" name="status" id="status">
+                                    <option value="">Pilih Status</option>
+                                    <option value="aktif">Aktif</option>
+                                    <option value="cuti">Cuti</option>
+                                    <option value="nonaktif">Non-Aktif</option>
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <div class="table-responsive">
                     <table class="employee-table table">
                         <thead class="table-light">
@@ -22,6 +59,7 @@
                                 <th>Nama</th>
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
+                                <th>Status</th>
                                 <th>Bergabung Sejak</th>
                                 <th>#</th>
                             </tr>
@@ -92,19 +130,37 @@
 @push('after_styles')
 <link rel="stylesheet" href="{{ asset('app-assets/vendors/css/tables/datatable/datatables.min.css') }}">
 @endpush
-@push('after_scripts')
-<script>
-
-    function createPage()
-    {
-        window.location = '/employee/create';
-    }
-</script>
-@endpush
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function() {
+    $('#jabatan').select2();
+    $('#divisi').select2();
+    $('#jabatan, #divisi, #status').change(function() {
+        applyFilters();
+    });
+
+    function applyFilters() {
+        var jabatan = $('#jabatan').val();
+        var divisi = $('#divisi').val();
+        var status = $('#status').val();
+
+        // Redirect to the URL with query parameters
+        var url = '/employee-list' + '?';
+
+        if (jabatan) {
+            url += 'jabatan=' + jabatan;
+        }
+        if (divisi) {
+            url += 'divisi=' + divisi;
+        }
+        if (status) {
+            url += 'status=' + status;
+        }
+
+        $('.employee-table').DataTable().ajax.url(url).load();
+    }
+
     $('table').on('draw.dt',function(){
         $('.delete-data').click(function(e) {
             e.preventDefault();
