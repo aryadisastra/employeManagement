@@ -11,6 +11,7 @@ use App\Http\Controllers\KategoriBeritaController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\LembagaController;
 use App\Http\Controllers\RoleController;
@@ -46,6 +47,14 @@ Route::middleware('admin')->group(function(){
     Route::get('/home', [HomeController::class,'index'])->name('home');
 
     Route::get('/getDataChart',[HomeController::class,'getDataChart']);
+
+    Route::get('/employee',[EmployeeController::class,'index'])->name('employee');
+    Route::get('/employee/create',[EmployeeController::class,'create']);
+    Route::post('/employee/store',[EmployeeController::class,'store']);
+    Route::get('/employee/edit/{id}',[EmployeeController::class,'edit']);
+    Route::post('/employee/update/{id}',[EmployeeController::class,'update']);
+    Route::delete('/employee/delete/{id}',[EmployeeController::class,'delete']);
+    Route::get('/employee-list',[EmployeeController::class,'getData']);
 
     Route::get('/jabatan',[JabatanController::class,'index'])->name('jabatan');
     Route::post('/jabatan/store',[JabatanController::class,'store']);
