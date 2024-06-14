@@ -18,7 +18,7 @@
                     </div>
                     <div class="avatar bg-light-primary p-50">
                         <span class="avatar-content">
-                            <i data-feather="user" class="font-medium-4"></i>
+                            <i data-feather="folder" class="font-medium-4"></i>
                         </span>
                     </div>
                 </div>
@@ -55,13 +55,13 @@
                     <div class="me-2">
                         <p class="card-text mb-50">Divisi</p>
                         <h3 class="fw-bolder">
-                            <span style="color: rgb(0, 143, 251);" id="totalDivisi">0</span>
+                            <span id="totalDivisi">0</span>
                         </h3>
                     </div>
                     <div>
                         <p class="card-text mb-50">Karyawan</p>
                         <h3 class="fw-bolder">
-                            <span style="color: rgb(0, 227, 150);" id="totalKaryawan">0</span>
+                            <span  id="totalEmployee">0</span>
                         </h3>
                     </div>
                 </div>
@@ -79,34 +79,29 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        $.ajax({
+    $.ajax({
         url: '/getDataChart',
-        type: 'GET', // atau 'POST' tergantung pada kebutuhan Anda
+        type: 'GET',
         dataType: 'json',
         success: function(response) {
-            var categories = [];
-            var pesantrenData = [];
-            var santriData = [];
-            var totalPesantren = 0;
-            var totalSantri = 0;
+            var categories = []; 
+            var seriesData = []; 
+            var totalDivisi = 0; 
+            var totalEmployee = 0; 
 
-            // Loop melalui array respons dan ekstrak data yang diperlukan
-            $.each(response, function(index, item) {
-                categories.push(item.provinsi);
-                pesantrenData.push(item.pesantren);
-                santriData.push(item.santri);
-                totalPesantren = item.totalPesantren;
-                totalSantri = item.totalSantri;
+            
+            $.each(response, function(divisi, data) {
+                totalEmployee = data.totalEmployeeAll
+                totalDivisi = data.totalDivisiAll
+                categories.push(divisi); 
+                seriesData.push({
+                    name: divisi,
+                    data: [data.totalEmployee] 
+                });
             });
 
             var options = {
-                series: [{
-                    name: 'Pesantren',
-                    data: pesantrenData
-                }, {
-                    name: 'Santri',
-                    data: santriData
-                }],
+                series: seriesData,
                 chart: {
                     type: 'bar',
                     height: 350
@@ -140,13 +135,18 @@
                 tooltip: {
                     y: {
                         formatter: function (val) {
-                            return val.toLocaleString('id-ID') + " Data"
+                            return val.toLocaleString('id-ID') + " Data";
                         }
+                    },
+                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                        var division = w.globals.labels[dataPointIndex];
+                        var totalEmployees = series[seriesIndex][dataPointIndex];
+                        return '<div class="tooltip-title">' + division + '</div><div class="tooltip-content">' + totalEmployees.toLocaleString('id-ID') + ' Employee</div>';
                     }
                 }
             };
-            $('#totalPesantren').text(totalPesantren.toLocaleString('id-ID'))
-            $('#totalSantri').text(totalSantri.toLocaleString('id-ID'))
+            $('#totalDivisi').text(totalDivisi.toLocaleString('id-ID'))
+            $('#totalEmployee').text(totalEmployee.toLocaleString('id-ID'))
             var wil = document.getElementById('wilayah-chart');
     
             if (wil) {
