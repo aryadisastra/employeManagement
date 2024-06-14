@@ -36,6 +36,7 @@
     <script src="{{asset('app-assets/js/scripts/pages/app-user-list.js')}}"></script>
     <script src="{{asset('app-assets/js/scripts/pages/app-divisi-list.js')}}"></script>
     <script src="{{asset('app-assets/js/scripts/pages/app-jabatan-list.js')}}"></script>
+    <script src="{{asset('app-assets/js/scripts/pages/app-employee-list.js')}}"></script>
     <!-- END: Page JS-->
 
     <script>
@@ -93,5 +94,8 @@
         </script>
     @endif
 
+    <script>
+        $('.select2').select2();
+    </script>
 </body>
 <!-- END: Body-->

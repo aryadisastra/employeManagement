@@ -10,4 +10,9 @@ class Divisi extends Model
     use HasFactory;
 
     protected $table = 'divisi';
+
+    public function employee()
+    {
+        return $this->hasMany(Employee::class,'divisi_id','id');
+    }
 }
